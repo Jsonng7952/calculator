@@ -1,3 +1,7 @@
 # calculator
-Calculator developed in Javascript, HTML and CSS.
-Includes keyboard support and basic arithmetic functions like addition, subtraction, division and multiplication.
+Calculator developed in Javascript, HTML and CSS.<br/>
+Includes keyboard support and basic arithmetic functions like:
+    - Addition,
+    - Subtraction 
+    - Multiplication.
+    - Division
