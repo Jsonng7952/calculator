@@ -136,7 +136,7 @@ function afterKeyPress(e){
         if(key.id >= 0 && key.id <= 9){
             numberPressed(key);
         }
-        else if(key.id === "x" || key.id === "/" || key.id === "-" || key.id === "+" || key.id === "="){
+        else if(key.id === "*" || key.id === "/" || key.id === "-" || key.id === "+" || key.id === "="){
             operatorPressed(key);
         }
         else if(key.id === "."){
