@@ -74,13 +74,14 @@ function operatorPressed(operator){
         currNumber = "";
         decimal.disabled = false;
     }
+    // Else if an operator is pressed after a number + operator is stored, evaluate the current pair.
     else if(pair.length === 2){                             
         pair.push(parseFloat(currNumber));
         currNumber = "";
         currResult = operate(pair[1], pair[0], pair[2]).toString().substr(0, 10);    
         display.innerHTML = currResult;
         pair = [];
-        pair.push(currResult);
+        pair.push(parseFloat(currResult));  // Push the results into the first spot of the cleared array.
         decimal.disabled = false;
     }
 }
@@ -92,23 +93,27 @@ function clearDisplay(){
     decimal.disabled = false;
 }
 
+// Delete the last number entered in by the user.
 function deleteDisplay(){
     if(currResult === 'ERROR'){
         display.innerHTML = "0";        
     }
     if(currNumber.length > 0){
+        // Involves decimal
         if(currNumber.slice(-1) === '.'){
             currNumber = currNumber.substring(0, currNumber.length - 1);
             decimal.disabled = false;
-            // If the currentNumber is 0., make sure to reset it to "" after backspace.
+            // If the currentNumber is '0.', make sure to reset it to "" after backspace.
             if(currNumber.length === 1 && currNumber === "0"){
                 currNumber = "";
                 display.innerHTML = "0";
             }
+            // Else change the display to the current number.
             else{
                 display.innerHTML = currNumber;
             }
         }
+        // Remove the last number
         else{
             currNumber = currNumber.substring(0, currNumber.length - 1);
             if(currNumber.length === 0){
@@ -122,6 +127,32 @@ function deleteDisplay(){
     }
 }
 
+// Listen for keyboard input
+function afterKeyPress(e){
+    const key = document.querySelector(`.btn-container button[data-key="${e.keyCode}"]`);
+    const deleteKey = document.querySelector(`.delete-container button[data-key="${e.keyCode}"]`);
+
+    if(key != null){
+        if(key.id >= 0 && key.id <= 9){
+            numberPressed(key);
+        }
+        else if(key.id === "x" || key.id === "/" || key.id === "-" || key.id === "+" || key.id === "="){
+            operatorPressed(key);
+        }
+        else if(key.id === "."){
+            numberPressed(key);
+        }
+    }
+    if(deleteKey != null){
+        if(deleteKey.id === "clear"){
+            clearDisplay();
+        }
+        else if(deleteKey.id === "backspace"){
+            deleteDisplay();
+        }
+    }
+}
+
 let currNumber = "";
 let currOperator = "";
 let currResult = "";
@@ -129,21 +160,18 @@ let pair = [];
 
 const display = document.querySelector('.display');
 
-const numbers = document.querySelectorAll('.btn-container .numbers .number');
+const numbers = document.querySelectorAll('.btn-container .number');
 numbers.forEach(number => {
-    number.addEventListener('click', () => numberPressed(number))
+    number.addEventListener('click', () => numberPressed(number));
 });
 
-const decimal = document.querySelector('.float');
+const decimal = document.querySelector('.btn-container .float');
 decimal.addEventListener('click', () => numberPressed(decimal));
 
-const operators = document.querySelectorAll('.btn-container .operators .operator');
+const operators = document.querySelectorAll('.btn-container .operator');
 operators.forEach(operator => {
     operator.addEventListener('click', () => operatorPressed(operator))
 });
-
-const equal = document.querySelector('.btn-container .numbers .operator');
-equal.addEventListener('click', () => operatorPressed(equal));
 
 const clear = document.querySelector('.delete-container #clear');
 clear.addEventListener('click', clearDisplay);
@@ -151,3 +179,4 @@ clear.addEventListener('click', clearDisplay);
 const backspace = document.querySelector('.delete-container #backspace');
 backspace.addEventListener('click', deleteDisplay);
 
+window.addEventListener('keydown', afterKeyPress);
